@@ -1,0 +1,12 @@
+[db_factory]
+default_db_struct = "PostgreSQL"
+
+[db_psql]
+host = "localhost"
+port = "5432"
+db_name = "fmdp"
+user = "postgres"
+password = "postgres"
+
+[db_sqlite]
+db_name = "fmdp.db"

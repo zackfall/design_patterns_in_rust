@@ -1,0 +1,12 @@
+[package]
+name = "factory_method_pattern"
+version = "0.1.0"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+postgres = "0.19.1"
+rusqlite = "0.25.3"
+toml = "0.5.8"
+serde = { version = "1.0", features = ["derive"] }
