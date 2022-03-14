@@ -18,8 +18,7 @@ impl SQLiteDBAdapter {
 
 impl DBAdapter for SQLiteDBAdapter {
     fn get_connection(&self) -> DBConnection {
-        let client = Connection::open(self.db_name.as_str());
-        match client {
+        match Connection::open(self.db_name.as_str()) {
             Ok(client) => {
                 println!("Connection DB ==> {}", self.db_name);
                 DBConnection::SQLiteConn(client)

@@ -3,8 +3,7 @@ use crate::db_factory::DBFactory;
 use crate::product::Product;
 use crate::utils::connection::DBConnection;
 use postgres;
-use rusqlite;
-use rusqlite::params;
+use rusqlite::{self, params};
 
 pub struct ProductDAO {
     db_adapter: Box<dyn DBAdapter>,
@@ -45,12 +44,12 @@ impl ProductDAO {
                     Ok(stmt) => stmt,
                     Err(err) => panic!("{}", err),
                 };
-                let mut results = match statement.query([]) {
-                    Ok(result) => result,
+                let mut rows = match statement.query([]) {
+                    Ok(rows) => rows,
                     Err(err) => panic!("{}", err),
                 };
 
-                while let Some(row) = match results.next() {
+                while let Some(row) = match rows.next() {
                     Ok(row) => row,
                     Err(err) => panic!("{}", err),
                 } {
@@ -73,24 +72,24 @@ impl ProductDAO {
                     "INSERT INTO products(id_product, product_name, product_price) VALUES ($1, $2, $3)",
                     &[&product.get_id_product(), &product.get_product_name(), &product.get_price()]
                 ) {
-                    Ok(_) => return true,
+                    Ok(_) => true,
                     Err(err) => {
                         println!("{}", err);
-                        return false;
+                        false
                     },
-                };
+                }
             }
             DBConnection::SQLiteConn(conn) => {
                 match conn.execute(
                     "INSERT INTO products(id_product, product_name, product_price) VALUES (?1, ?2, ?3)",
                     params![product.get_id_product(), product.get_product_name(), product.get_price()],
                 ) {
-                    Ok(_) => return true,
+                    Ok(_) => true,
                     Err(err) => {
                         println!("{}", err);
-                        return false;
+                        false
                     },
-                };
+                }
             }
         }
     }

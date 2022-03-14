@@ -35,8 +35,7 @@ impl PostgreSQLDBAdapter {
 impl DBAdapter for PostgreSQLDBAdapter {
     fn get_connection(&self) -> DBConnection {
         let url = self.create_connection_url();
-        let client = Client::connect(url.as_str(), NoTls);
-        match client {
+        match Client::connect(url.as_str(), NoTls) {
             Ok(client) => {
                 println!("Connection string ==> {}", url);
                 DBConnection::PSQLConn(client)
