@@ -1,5 +1,6 @@
 use crate::adapters::{
-    db_adapter::DBAdapter, psql_db_adapter::PostgreSQLDBAdapter, sqlite_db_adapter::SQLiteDBAdapter,
+    db_adapter::DBAdapter, maria_db_adapter::MariaDBAdapter, psql_db_adapter::PostgreSQLDBAdapter,
+    sqlite_db_adapter::SQLiteDBAdapter,
 };
 use crate::db_type::DBType;
 use crate::utils::properties::Properties;
@@ -11,6 +12,7 @@ impl DBFactory {
         match db_type {
             DBType::PostgreSQL => Box::new(PostgreSQLDBAdapter::new()),
             DBType::SQLite => Box::new(SQLiteDBAdapter::new()),
+            DBType::MariaDB => Box::new(MariaDBAdapter::new()),
         }
     }
 
@@ -24,6 +26,10 @@ impl DBFactory {
             "SQLite" => {
                 println!("Default DB ==> {}", default_db);
                 Box::new(SQLiteDBAdapter::new())
+            }
+            "MariaDB" => {
+                println!("Default DB ==> {}", default_db);
+                Box::new(MariaDBAdapter::new())
             }
             _ => {
                 panic!(

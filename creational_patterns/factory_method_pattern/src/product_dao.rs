@@ -2,8 +2,9 @@ use crate::adapters::db_adapter::DBAdapter;
 use crate::db_factory::DBFactory;
 use crate::product::Product;
 use crate::utils::connection::DBConnection;
+use mysql::{params, prelude::*};
 use postgres;
-use rusqlite::{self, params};
+use rusqlite::{self, params as lite_params};
 
 pub struct ProductDAO {
     db_adapter: Box<dyn DBAdapter>,
@@ -60,6 +61,11 @@ impl ProductDAO {
                     ))
                 }
             }
+            DBConnection::MariaDBConn(mut pconn) => {
+                pconn.query_map(query, |(id_product, product_name, price)| {
+                    product_list.push(Product::new(id_product, product_name, price))
+                });
+            }
         }
         product_list
     }
@@ -82,13 +88,28 @@ impl ProductDAO {
             DBConnection::SQLiteConn(conn) => {
                 match conn.execute(
                     "INSERT INTO products(id_product, product_name, product_price) VALUES (?1, ?2, ?3)",
-                    params![product.get_id_product(), product.get_product_name(), product.get_price()],
+                    lite_params![product.get_id_product(), product.get_product_name(), product.get_price()]
                 ) {
                     Ok(_) => true,
                     Err(err) => {
                         println!("{}", err);
                         false
                     },
+                }
+            }
+            DBConnection::MariaDBConn(mut conn) => {
+                match conn.exec_batch(
+                    "INSERT INTO products (id_product, product_name, product_price) VALUES (:id_product, :product_name, :product_price)",
+                    &[params! {
+                        "id_product" => product.get_id_product(),
+                        "product_name" => product.get_product_name(),
+                        "product_price" => product.get_price(),
+                    }]) {
+                    Ok(_) => true,
+                    Err(err) => {
+                        println!("{}", err);
+                        false
+                    }
                 }
             }
         }

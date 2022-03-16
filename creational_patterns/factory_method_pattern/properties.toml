@@ -1,5 +1,5 @@
 [db_factory]
-default_db_struct = "PostgreSQL"
+default_db_struct = "MariaDB"
 
 [db_psql]
 host = "localhost"
@@ -10,3 +10,10 @@ password = "postgres"
 
 [db_sqlite]
 db_name = "fmdp.db"
+
+[db_mariadb]
+host = "localhost"
+port = "3306"
+db_name = "fmdp"
+user = "isaac"
+password = "1234"

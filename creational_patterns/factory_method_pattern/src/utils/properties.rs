@@ -8,6 +8,7 @@ pub struct Properties {
     pub db_factory: DBFactoryProperties,
     pub db_psql: DBPostgreSQLProperties,
     pub db_sqlite: DBSQLiteProperties,
+    pub db_mariadb: MariaDBProperties,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -27,6 +28,15 @@ pub struct DBPostgreSQLProperties {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct DBSQLiteProperties {
     pub db_name: String,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct MariaDBProperties {
+    pub host: String,
+    pub port: String,
+    pub db_name: String,
+    pub user: String,
+    pub password: String,
 }
 
 impl Properties {
